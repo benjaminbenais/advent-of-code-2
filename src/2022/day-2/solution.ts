@@ -1,6 +1,15 @@
 import fs from 'fs';
 
-const puzzleInput: string = fs.readFileSync('./puzzle-input.txt', 'utf-8');
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const puzzleInput = fs.readFileSync(
+  path.join(__dirname, './puzzle-input.txt'),
+  'utf-8',
+);
 
 const rounds: string[] = puzzleInput.split('\n').filter((line) => !!line);
 
