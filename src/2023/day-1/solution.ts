@@ -9,9 +9,8 @@ const puzzleInput = fs.readFileSync(
   path.join(__dirname, './puzzle-input.txt'),
   'utf-8',
 );
-const parsedInput = puzzleInput.split('\n');
 
-const digitsMapping = {
+const mapping = {
   '1': '1',
   '2': '2',
   '3': '3',
@@ -21,10 +20,6 @@ const digitsMapping = {
   '7': '7',
   '8': '8',
   '9': '9',
-} as const;
-
-const fullMapping = {
-  ...digitsMapping,
   one: '1',
   two: '2',
   three: '3',
@@ -36,45 +31,46 @@ const fullMapping = {
   nine: '9',
 } as const;
 
-type Mapping = typeof digitsMapping | typeof fullMapping;
+const partOneRegex = /(\d)/g;
+const partTwoRegex = /(?=(one|two|three|four|five|six|seven|eight|nine|\d))/g;
 
-function getDigitsFromString(mapping: Mapping): (line: string) => number {
-  const matchers = Object.keys(mapping) as (keyof Mapping)[];
-
-  return (line) => {
-    const digits: { index: number; n: string }[] = [];
-
-    matchers.forEach((matcher) => {
-      // Get the index of every matcher's occurences
-      // Example for matcher "one" in "oneaone" -> index [[index: 0], [index: 4]]
-      const regex = new RegExp(matcher, 'g');
-      const matches = [...line.matchAll(regex)];
-
-      // For each match, push the index and matcher in `digits`.
-      matches.forEach((match) => {
-        digits.push({ index: match.index!, n: mapping[matcher] });
-      });
-    });
-
-    const sortedDigits = digits.sort((a, b) => a.index - b.index);
-
-    // Extract the first and last digits.
-    const first = sortedDigits[0].n;
-    const second = sortedDigits[sortedDigits.length - 1].n;
-
-    return Number(first + second);
-  };
+function isKeyValid(k: string): k is keyof typeof mapping {
+  return k in mapping;
 }
 
-function main(mapping: Mapping) {
-  const cb = getDigitsFromString(mapping);
+function getFirstAndLastMatches(matchers: RegExpMatchArray[]) {
+  const firstMatch = matchers[0];
+  const lastMatch = matchers[matchers.length - 1];
 
-  return parsedInput
-    .map(cb)
-    .reduce((acc: number, curr: number) => acc + curr, 0);
+  const firstKey = firstMatch[1];
+  const lastKey = lastMatch[1];
+
+  if (isKeyValid(firstKey) && isKeyValid(lastKey)) {
+    return [firstKey, lastKey];
+  }
+
+  return [];
 }
 
-const partOneResult = main(digitsMapping);
-const partTwoResult = main(fullMapping);
-console.log(partOneResult);
-console.log(partTwoResult);
+function processLine(line: string, regex: RegExp): number {
+  const matches = [...line.matchAll(regex)];
+  const [first, last] = getFirstAndLastMatches(matches);
+
+  if (first && last) {
+    return Number(mapping[first] + mapping[last]);
+  }
+
+  return 0;
+}
+
+function main(regex: RegExp) {
+  return puzzleInput
+    .split('\n')
+    .map((line) => processLine(line, regex))
+    .reduce((acc, curr) => acc + curr, 0);
+}
+
+const partOneResult = main(partOneRegex);
+const partTwoResult = main(partTwoRegex);
+console.log('partOneResult: ', partOneResult);
+console.log('partTwoResult: ', partTwoResult);
