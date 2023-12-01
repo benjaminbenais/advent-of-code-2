@@ -1,6 +1,14 @@
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const puzzleInput = fs.readFileSync('./puzzle-input.txt', 'utf-8');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const puzzleInput = fs.readFileSync(
+  path.join(__dirname, './puzzle-input.txt'),
+  'utf-8',
+);
 const parsedInput = puzzleInput.split('\n');
 
 const digitsMapping = {
@@ -30,36 +38,43 @@ const fullMapping = {
 
 type Mapping = typeof digitsMapping | typeof fullMapping;
 
-function getDigitsFromString(line: string, mapping: Mapping): number {
-  const keys = Object.keys(mapping) as (keyof Mapping)[];
-  const digits: { idx: number; n: string }[] = [];
+function getDigitsFromString(mapping: Mapping): (line: string) => number {
+  const matchers = Object.keys(mapping) as (keyof Mapping)[];
 
-  keys.forEach((key) => {
-    const idx = [...line.matchAll(new RegExp(key, 'g'))];
-    idx.forEach((item) => {
-      digits.push({ idx: item.index!, n: mapping[key] });
+  return (line) => {
+    const digits: { index: number; n: string }[] = [];
+
+    matchers.forEach((matcher) => {
+      // Get the index of every matcher's occurences
+      // Example for matcher "one" in "oneaone" -> index [[index: 0], [index: 4]]
+      const regex = new RegExp(matcher, 'g');
+      const matches = [...line.matchAll(regex)];
+
+      // For each match, push the index and matcher in `digits`.
+      matches.forEach((match) => {
+        digits.push({ index: match.index!, n: mapping[matcher] });
+      });
     });
-  });
 
-  const final = digits
-    .filter((v) => v.idx !== -1)
-    .sort((a, b) => a.idx - b.idx);
+    const sortedDigits = digits.sort((a, b) => a.index - b.index);
 
-  const first = final[0].n;
-  const second = final[final.length - 1].n;
+    // Extract the first and last digits.
+    const first = sortedDigits[0].n;
+    const second = sortedDigits[sortedDigits.length - 1].n;
 
-  console.log(first, second);
-
-  return Number(first + second);
+    return Number(first + second);
+  };
 }
 
 function main(mapping: Mapping) {
+  const cb = getDigitsFromString(mapping);
+
   return parsedInput
-    .map((line) => getDigitsFromString(line, mapping))
+    .map(cb)
     .reduce((acc: number, curr: number) => acc + curr, 0);
 }
 
 const partOneResult = main(digitsMapping);
 const partTwoResult = main(fullMapping);
-console.log('partOneResult: ', partOneResult);
-console.log('partTwoResult: ', partTwoResult);
+console.log(partOneResult);
+console.log(partTwoResult);
