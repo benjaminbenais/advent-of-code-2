@@ -14,7 +14,7 @@ function validateEnginePart(lines: string[], indexes: number[][]) {
 }
 
 function processPartOne() {
-  let engineParts = 0;
+  let validEngineParts = 0;
 
   for (let i = 0; i < engineSchematic.length; i++) {
     const currentLine = engineSchematic[i];
@@ -30,10 +30,10 @@ function processPartOne() {
     }
 
     // Extract the number occurences in the current line
-    const numberMatches = extractMatches(currentLine, /(\d+)/g);
+    const enginePartsMatches = extractMatches(currentLine, /(\d+)/g);
 
     // For each number, check is there is an adjacent special character
-    numberMatches.forEach(([number, index]) => {
+    enginePartsMatches.forEach(([number, index]) => {
       const [currentLineIndexes, adjacentLinesIndexes] =
         generateAdjacentIndexes(number, index);
 
@@ -46,12 +46,12 @@ function processPartOne() {
       ]);
 
       if (isEnginePart) {
-        engineParts += Number(number);
+        validEngineParts += Number(number);
       }
     });
   }
 
-  return engineParts;
+  return validEngineParts;
 }
 
 const result = processPartOne();
