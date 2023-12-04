@@ -34,7 +34,7 @@ function getGearRatio(lines: string[], gearIndexes: number[][]) {
   return 0;
 }
 
-function processPartOne() {
+function main() {
   let engineParts = 0;
 
   for (let i = 0; i < engineSchematic.length; i++) {
@@ -50,10 +50,8 @@ function processPartOne() {
       nextLine = engineSchematic[i + 1];
     }
 
-    // Extract the number occurences in the current line
     const gearMatches = extractMatches(currentLine, /(\*)/g);
 
-    // For each number, check is there is an adjacent special character
     gearMatches.forEach(([number, index]) => {
       const [currentLineIndexes, adjacentLinesIndexes] =
         generateAdjacentIndexes(number, index);
@@ -75,5 +73,5 @@ function processPartOne() {
   return engineParts;
 }
 
-const result = processPartOne();
+const result = main();
 console.log('result: ', result);
