@@ -39,6 +39,7 @@ function findRanges(ranges: Range[], destination: string): Range[] {
   }
 
   const result: Range[] = [];
+
   ranges.forEach((range) => {
     const { maps, destination: nextDestination } = groups[destination];
 
