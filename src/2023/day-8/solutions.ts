@@ -8,9 +8,11 @@ const puzzleInput = readFileSync('./puzzle-input.txt', import.meta.url).split(
 
   Disclaimer:
 
-  Actual result of part two was found by inserting
-  the iterations count in a spreadsheet (like Google Sheets)
-  and using a builting LCM function to get the final result.
+  Final result of part two was found by inserting
+  the iterations count in Google Sheets and using the
+  builtin `LCM` function.
+
+  Still gotta get the correct numbers to input ;)
 
 */
 
@@ -19,7 +21,7 @@ type Map = {
   nodes: Record<string, [string, string]>;
 };
 
-function parseInput(): Map {
+function generateMap(): Map {
   const [rawDirections, , ...rawNodes] = puzzleInput;
   const directions = rawDirections.split('').map((el) => (el === 'L' ? 0 : 1));
   const nodes: Map['nodes'] = {};
@@ -61,13 +63,13 @@ function findNodes(
 }
 
 function part1() {
-  const { directions, nodes } = parseInput();
+  const { directions, nodes } = generateMap();
   const endingNodes = ['ZZZ'];
   return findNodes(directions, nodes, endingNodes)('AAA');
 }
 
 function part2() {
-  const { directions, nodes } = parseInput();
+  const { directions, nodes } = generateMap();
 
   const startingNodes = Object.keys(nodes).filter((node) => node.endsWith('A'));
   const endingNodes = Object.keys(nodes).filter((node) => node.endsWith('Z'));
