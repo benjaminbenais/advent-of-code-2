@@ -4,6 +4,12 @@ const puzzleInput = readFileSync('./puzzle-input.txt', import.meta.url).split(
   '\n',
 );
 
+type Report = number[];
+
+function getReports(): Report[] {
+  return puzzleInput.map((line) => line.split(' ').map(Number));
+}
+
 function isAscending(a: number, b: number, c: number) {
   return a < b && b < c;
 }
@@ -14,12 +20,6 @@ function isDescending(a: number, b: number, c: number) {
 
 function isAscendingOrDescending(a: number, b: number, c: number) {
   return isAscending(a, b, c) || isDescending(a, b, c);
-}
-
-type Report = number[];
-
-function getReports(): Report[] {
-  return puzzleInput.map((line) => line.split(' ').map(Number));
 }
 
 function validateReport(levels: Report) {
