@@ -51,11 +51,7 @@ function part2(lists: Lists): number {
   return result;
 }
 
-function main() {
-  const lists = getLists(puzzleInput);
+const lists = getLists(puzzleInput);
 
-  console.log('Part 1: ', part1(lists));
-  console.log('Part 2: ', part2(lists));
-}
-
-main();
+console.log('Part 1: ', part1(lists));
+console.log('Part 2: ', part2(lists));

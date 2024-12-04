@@ -86,10 +86,6 @@ function part2(reports: Report[]): number {
   return safeReportsCount;
 }
 
-function main() {
-  const reports = getReports();
-  console.log('Part 1: ', part1(reports));
-  console.log('Part 2: ', part2(reports));
-}
-
-main();
+const reports = getReports();
+console.log('Part 1: ', part1(reports));
+console.log('Part 2: ', part2(reports));
