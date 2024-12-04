@@ -32,7 +32,7 @@ function part2(memory: string): number {
 
   let result = 0;
 
-  instructions?.forEach((match) => {
+  instructions.forEach((match) => {
     const instruction = match[0];
     const index = match.index;
 
@@ -57,5 +57,3 @@ function part2(memory: string): number {
 
 console.log('Part 1: ', part1(puzzleInput));
 console.log('Part 2: ', part2(puzzleInput));
-//   Part 1:  190604937
-// Part 2:  82857512
