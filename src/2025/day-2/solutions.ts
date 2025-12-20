@@ -37,8 +37,9 @@ const validatePart2 = (id: string, n: number): boolean => {
   }
 
   for (let i = 0; i < id.length / n - 1; i++) {
-    const a = id.slice(i * n, i * n + n);
-    const b = id.slice(i * n + n, i * n + n + n);
+    const offset = i * n;
+    const a = id.slice(offset, offset + n);
+    const b = id.slice(offset + n, offset + n * 2);
     if (a !== b) {
       return validatePart2(id, n + 1);
     }
