@@ -14,8 +14,7 @@ const getInvalidIds = (ranges: Range[], validate: validate): number => {
     let result = 0;
 
     for (let i = +start; i <= +end; i++) {
-      const id = i.toString();
-      if (validate(id)) {
+      if (validate(i.toString())) {
         result += i;
       }
     }
